@@ -3,16 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public  class Board{
+public class Board {
 
-    private static readonly long[] til; 
+    private static readonly long[] til;
     private static readonly long[] win;
     private static readonly long[] qrt;
+    private static readonly long qrts;
     private long X;
     private long O;
-    public bool Xturn; //should be pruivate
+    private bool Xturn; 
 
-    public bool[] qsym = new bool[4];
+
+    public struct Move{
+        public readonly long move;
+        public readonly int quarter;
+        public readonly bool clockwise;
+
+        public Move(long m, int q, bool c) {
+            move = m;
+            quarter = q;
+            clockwise = c;
+        }
+    }
+
 
     static Board() {
         til = new long[36];
@@ -21,7 +34,7 @@ public  class Board{
         for (int i = 0; i < 36; i++) {
             til[i] = 1L << i;
         }
-
+       
         //Horizontal  
         for (int i = 0; i < 6; i++) {
             win[i] = til[6*i] | til[6*i + 1] | til[6*i + 2] | til[6*i + 3] | til[6*i + 4];
@@ -49,16 +62,13 @@ public  class Board{
         qrt[1] = til[3] | til[4] | til[5] | til[9] | til[11] | til[15] | til[16] | til[17];
         qrt[2] = til[18] | til[19] | til[20] | til[24] | til[26] | til[30] | til[31] | til[32];
         qrt[3] = til[21] | til[22] | til[23] | til[27] | til[29] | til[33] | til[34] | til[35];
+        qrts = qrt[0] | qrt[1] | qrt[2] | qrt[3];
     }
 
     public Board() { 
         X = 0L;
         O = 0L;
         Xturn = true;
-        qsym[0] = true;
-        qsym[1] = true;
-        qsym[2] = true;
-        qsym[3] = true;
     }
 
     public bool HasEnded() {
@@ -135,16 +145,20 @@ public  class Board{
         
     }
 
-    public void MakeMove(int tile, int quarter, bool clockwise) {
-        Mark(til[tile]);
-        Rotate(quarter, clockwise);
+
+
+    public void MakeMove(Move m) {
+        Mark(m.move);
+        Rotate(m.quarter, m.clockwise);
         Xturn = !Xturn;
     }
 
-    public void UnDoMove(int tile, int quarter, bool clockwise) {
+
+
+    public void UnDoMove(Move m) {
         Xturn = !Xturn;
-        Rotate(quarter, !clockwise);
-        Clear(til[tile]);
+        Rotate(m.quarter, !m.clockwise);
+        Clear(m.move);
     }
 
     public int Evaluate(bool player) {
@@ -155,10 +169,9 @@ public  class Board{
             if (Xline != 0) {
                 int points =NumberOfSetBits(Xline);
                 if (points == 5) {
-                    xscore = 999;
-                    break;
+                    if (!player) return -999;
+                    else return 999;
                 } else if (points > 1) {
-                    //Debug.Log("Scored " + points + " on " + i);
                     xscore += points * points;
                 }
             }
@@ -169,8 +182,8 @@ public  class Board{
             if (Oline != 0) {
                 int points = NumberOfSetBits(Oline);
                 if (points == 5) {
-                    oscore = 999;
-                    break;
+                    if (!player) return 999;
+                    else return -999;
                 } else if (points > 1) {
                     oscore += points * points;
                 }
@@ -181,6 +194,10 @@ public  class Board{
         else return xscore - oscore;
     }
 
+    public void MarkInt(int t) {
+        Mark(til[t]);
+    }
+
     private void Mark(long tile) {
         if (Xturn) {
             X = (long)((long)X | (long)tile);
@@ -189,20 +206,6 @@ public  class Board{
         }
     }
 
-    public void MarkInt(int t) {
-        Mark(til[t]);
-
-        long b = X | O;
-        if ((b & qrt[0]) == 0L) qsym[0]=true;
-        else qsym[0] = false;
-        if ((b & qrt[1]) == 0L) qsym[1]=true;
-        else qsym[1] = false;
-        if ((b & qrt[2]) == 0L) qsym[2] = true;
-        else qsym[2] = false;
-        if ((b & qrt[3]) == 0L) qsym[3] = true;
-        else qsym[3] = false;
-        // Xturn = !Xturn;
-    }
 
     private void Clear(long tile) {
         if (Xturn) {
@@ -213,9 +216,7 @@ public  class Board{
     }
 
     public void Print() {
-
-        string s = ""; 
-         //   = "X score:" + Evaluate(true) + "\n"+ "O score:" + Evaluate(false) + "\n";
+        string s= "X score:" + Evaluate(true) + "\n"+ "O score:" + Evaluate(false) + "\n";
         for (int i = 0; i < 36; i++) {
             if   ((O & til[i]) == til[i]) s = s + "O";
             else if ((X & til[i]) == til[i]) s = s + "X";
@@ -234,21 +235,34 @@ public  class Board{
         return Xturn;
     }
 
-    public List<int> GetMoves() {
-        List<int> l = new List<int>();
-        long sum = ~(X | O);
+    public List<Move> Getmoves() {
+        List <Move> moveList = new List<Move>();
+        long emptytiles = ~(X | O);
         for (int i = 0; i < 36; i++) {
-            if ((sum & til[i]) != 0L) l.Add(i);
+            if ((emptytiles & til[i]) != 0L) {
+                long sum = X | O| til[i];
+                if ((sum & qrts) == 0L) {
+                    moveList.Add(new Move(til[i], 0, true));
+                } else {
+                    if ((sum & qrt[0]) != 0L) {
+                        moveList.Add(new Move(til[i], 0, true));
+                        moveList.Add(new Move(til[i], 0, false));
+                    }
+                    if ((sum & qrt[1]) != 0L) {
+                        moveList.Add(new Move(til[i], 1, true));
+                        moveList.Add(new Move(til[i], 1, false));
+                    }
+                    if ((sum & qrt[2]) != 0L) {
+                        moveList.Add(new Move(til[i], 2, true));
+                        moveList.Add(new Move(til[i], 2, false));
+                    }
+                    if ((sum & qrt[3]) != 0L) {
+                        moveList.Add(new Move(til[i], 3, true));
+                        moveList.Add(new Move(til[i], 3, false));
+                    }
+                }
+            } 
         }
-        return l;
-    } 
-    public List<int> GetQuarters() {
-        List<int> l = new List<int>();
-        long b = X | O;
-        if ((b & qrt[0]) == 0L) l.Add(0);
-        if ((b & qrt[1]) == 0L) l.Add(1);
-        if ((b & qrt[2]) == 0L) l.Add(2);
-        if ((b & qrt[3]) == 0L) l.Add(3);
-        return l;
+        return moveList;
     }
 }
