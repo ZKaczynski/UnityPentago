@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Game : MonoBehaviour {
 
-    Board MainBoard = new Board();
+    public Board MainBoard = new Board();
 
     
    private Board.Move RootMinimax() {
@@ -59,17 +59,17 @@ public class Game : MonoBehaviour {
 
 
 
-    private void Update() {
+    private void Update() {/*
         if (Input.GetKeyDown(KeyCode.Space)) {
             
             Board.Move m = RootMinimax();
             MainBoard.MakeMove(m);
             //Debug.Log(m.Tile + " " + m.Quarter + " " + m.Clockwise);
             MainBoard.Print();
-            /*
+           
             MainBoard.MarkInt(21);
             int score = AlfaBetaMinimax(MainBoard, -9999, 9999, 1, 0, false);
-            Debug.Log(score);*/
+            Debug.Log(score);
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
@@ -79,18 +79,19 @@ public class Game : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R)) {
             MainBoard.Rotate(0, true);
             MainBoard.Print();
-        }
+        }*/
     }
 
     void Awake() {
-        
-        MainBoard.MarkInt(30);
-        MainBoard.MarkInt(31);
-        /*MainBoard.MarkInt(32);
-        MainBoard.MarkInt(33);
-        MainBoard.MarkInt(34);
-        MainBoard.MarkInt(35);*/
-        MainBoard.Print();
+        /*
+       MainBoard.MarkInt(10);
+       MainBoard.MarkInt(11);
+       MainBoard.MarkInt(12);
+         MainBoard.MarkInt(3);
+
+       MainBoard.MarkInt(14);
+       MainBoard.MarkInt(15);
+       MainBoard.Print();*/
         /*fo00reach (Board.Move move in MainBoard.Getmoves()) {
             Debug.Log(move.move+"|"+move.quarter+"|"+move.clockwise);
         }*/

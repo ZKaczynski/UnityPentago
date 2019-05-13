@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8791152015571705548}
   - component: {fileID: 6178108346101966758}
+  - component: {fileID: 345888045885606971}
   m_Layer: 0
   m_Name: Quarter
   m_TagString: Untagged
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d1633d80f997845418c21db664ba138f, type: 3}
-  m_Color: {r: 0.49056602, g: 0.40087572, b: 0.35866857, a: 0.3764706}
+  m_Color: {r: 0.49056602, g: 0.40087572, b: 0.35866857, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -88,6 +89,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &345888045885606971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7832022872295825543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68b61e414bc7fc64b9b03aac9aab6427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tiles: []
 --- !u!1001 &254487263563274507
 PrefabInstance:
   m_ObjectHideFlags: 0

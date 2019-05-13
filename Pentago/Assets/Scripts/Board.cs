@@ -227,10 +227,14 @@ public class Board {
     }
 
     private int NumberOfSetBits(long i) {
-        i = i - ((i >> 1) & 0x5555555555555555);
-        i = (i & 0x3333333333333333) + ((i >> 2) & 0x3333333333333333);
-        return (int)(((i + (i >> 4)) & 0xF0F0F0F0F0F0F0F) * 0x101010101010101) >> 56;
+        int count = 0;
+        while (i!=0L) {
+            count += (int)(i & 1L);
+            i >>= 1;
+        }
+        return count;
     }
+
     public bool CurrentPlayer() {
         return Xturn;
     }
@@ -264,5 +268,15 @@ public class Board {
             } 
         }
         return moveList;
+    }
+
+    public int[] GetInfo() {
+        int[] info = new int[36];
+        for (int i = 0; i < 36; i++) {
+            if ((O & til[i]) == til[i]) info[i] = 1;
+            else if ((X & til[i]) == til[i]) info[i] = 2;
+            else info[i] = 0;
+        }
+        return info;
     }
 }
