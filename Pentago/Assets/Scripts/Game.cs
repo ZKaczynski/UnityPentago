@@ -83,7 +83,7 @@ public class Game : MonoBehaviour {
     }
 
     void Awake() {
-        /*
+        
        MainBoard.MarkInt(10);
        MainBoard.MarkInt(11);
        MainBoard.MarkInt(12);
@@ -91,7 +91,7 @@ public class Game : MonoBehaviour {
 
        MainBoard.MarkInt(14);
        MainBoard.MarkInt(15);
-       MainBoard.Print();*/
+       MainBoard.Print();
         /*fo00reach (Board.Move move in MainBoard.Getmoves()) {
             Debug.Log(move.move+"|"+move.quarter+"|"+move.clockwise);
         }*/

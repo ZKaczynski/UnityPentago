@@ -7,9 +7,12 @@ public class GameCon : MonoBehaviour{
     private View view;
     private Game model;
 
+    private bool blockInput;
+
     void Start() {
         view = GetComponentInChildren<View>();
         model = GetComponentInChildren<Game>();
+        blockInput = false;
     }
 
     void Update(){
@@ -21,8 +24,10 @@ public class GameCon : MonoBehaviour{
 
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
             if (hit.collider != null) {
-                Debug.Log(hit.collider.gameObject.name);
-               
+                int x = hit.collider.gameObject.GetComponent<Tile>().id;
+
+                model.MainBoard.MarkInt(x);
+                view.Display(model.MainBoard.GetInfo());
             }
         }
         
@@ -31,6 +36,9 @@ public class GameCon : MonoBehaviour{
         if (Input.GetKeyDown(KeyCode.A)) {
             view.Display(model.MainBoard.GetInfo());
         }
+    }
 
+    public void NWClocwiseRot() {
+        view.qrts[0].RotateClockwise();
     }
 }
