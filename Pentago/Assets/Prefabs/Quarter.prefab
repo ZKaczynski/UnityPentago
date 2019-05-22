@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8791152015571705548}
   - component: {fileID: 6178108346101966758}
   - component: {fileID: 345888045885606971}
+  - component: {fileID: 7342672459009095212}
   m_Layer: 0
   m_Name: Quarter
   m_TagString: Untagged
@@ -102,6 +103,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles: []
+--- !u!114 &7342672459009095212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7832022872295825543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25a6eced51701ef4f938ee43b799391c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &254487263563274507
 PrefabInstance:
   m_ObjectHideFlags: 0

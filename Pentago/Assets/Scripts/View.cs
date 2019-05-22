@@ -45,4 +45,10 @@ public class View : MonoBehaviour{
 
     }
 
+    public void ResetTransform() {
+        for (int i = 0; i < 4; i++) {
+            qrts[i].ResetTransform();
+        }
+    }
+
 }

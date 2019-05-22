@@ -6,19 +6,25 @@ public class GameCon : MonoBehaviour{
 
     private View view;
     private Game model;
+    private InputBlock block;
 
-    private bool blockInput;
 
     void Start() {
         view = GetComponentInChildren<View>();
         model = GetComponentInChildren<Game>();
-        blockInput = false;
+        block = GetComponent<InputBlock>();
     }
 
     void Update(){
 
+        if (block.ShouldRefresh()) {
+            view.ResetTransform();
+            block.AlreadyRefreshed();
+            view.Display(model.MainBoard.GetInfo());
+        }
 
-        if (Input.GetMouseButtonDown(0)) {
+
+        if (Input.GetMouseButtonDown(0)&&!block.IsBlocked()) {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
@@ -39,6 +45,10 @@ public class GameCon : MonoBehaviour{
     }
 
     public void NWClocwiseRot() {
-        view.qrts[0].RotateClockwise();
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(0, true);
+            view.qrts[0].RotateClockwise();
+        }
+
     }
 }

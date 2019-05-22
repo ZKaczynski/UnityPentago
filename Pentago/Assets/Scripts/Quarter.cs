@@ -26,11 +26,13 @@ public class Quarter : MonoBehaviour{
 
 
     public void RotateClockwise() {
+        GetComponent<InputBlock>().Block();
         RotateTilesCouterClockwise();
         StartCoroutine("RotClockwise");
     }
 
     public void RotateCounterClockwise() {
+        GetComponent<InputBlock>().Block();
         RotateTilesClockwise();
         StartCoroutine("RotCounterClockwise");
     }
@@ -53,6 +55,7 @@ public class Quarter : MonoBehaviour{
             transform.Rotate(Vector3.back, 1f);
             yield return null;
         }
+        GetComponent<InputBlock>().Unblock();
     }
 
     IEnumerator RotCounterClockwise() {
@@ -60,6 +63,7 @@ public class Quarter : MonoBehaviour{
             transform.Rotate(Vector3.forward, 1f);
             yield return null;
         }
+        GetComponent<InputBlock>().Unblock();
     }
 
 }
