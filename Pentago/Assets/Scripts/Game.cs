@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : MonoBehaviour {
+public class Game {
 
     public Board MainBoard = new Board();
 
-    
-   private Board.Move RootMinimax() {
-        Board.Move best=new Board.Move(0L,0,true);
-        int bestscore= -9999;
+
+    private Board.Move RootMinimax() {
+        Board.Move best = new Board.Move(0L, 0, true);
+        int bestscore = -9999;
         List<Board.Move> moves = MainBoard.Getmoves();
-        for (int i=0; i<moves.Count;i++) {
+        for (int i = 0; i < moves.Count; i++) {
             int score;
             MainBoard.MakeMove(moves[i]);
-            score = AlfaBetaMinimax(MainBoard, -9999, 9999, 2, 0, false, MainBoard.CurrentPlayer());
+            score = AlfaBetaMinimax(MainBoard, -9999, 9999, 1, 0, false, !MainBoard.CurrentPlayer());
             MainBoard.UnDoMove(moves[i]);
             if (score > bestscore) {
                 best = moves[i];
@@ -22,11 +22,12 @@ public class Game : MonoBehaviour {
             }
         }
         return best;
-   }
-    
+    }
+
 
     private int AlfaBetaMinimax(Board board, int alfa, int beta, int maxDepth, int currentDepth, bool maxing, bool player) {
-        if (currentDepth == maxDepth||board.HasEnded()) {
+        if (currentDepth == maxDepth || board.HasEnded()) {
+            board.Print();
             return board.Evaluate(player);
         }
         int score;
@@ -35,7 +36,7 @@ public class Game : MonoBehaviour {
             List<Board.Move> moves = MainBoard.Getmoves();
             for (int i = 0; i < moves.Count; i++) {
                 board.MakeMove(moves[i]);
-                score = AlfaBetaMinimax(board, a, beta, maxDepth, currentDepth+1, !maxing, MainBoard.CurrentPlayer()); 
+                score = AlfaBetaMinimax(board, a, beta, maxDepth, currentDepth + 1, !maxing, player);
                 board.UnDoMove(moves[i]);
                 if (score > a) a = score;
                 if (a >= beta) return a;
@@ -46,20 +47,29 @@ public class Game : MonoBehaviour {
             List<Board.Move> moves = MainBoard.Getmoves();
             for (int i = 0; i < moves.Count; i++) {
                 board.MakeMove(moves[i]);
-                score = AlfaBetaMinimax(board, alfa, b, maxDepth, currentDepth+1, !maxing, MainBoard.CurrentPlayer());
+                score = AlfaBetaMinimax(board, alfa, b, maxDepth, currentDepth + 1, !maxing, player);
                 board.UnDoMove(moves[i]);
                 if (score < b) b = score;
                 if (alfa >= b) return b;
             }
             return b;
         }
-    }     
+    }
 
+    public void MakeAiMove() {
+        Board.Move m = RootMinimax();
+        MainBoard.MakeMove(m);
+        Debug.Log(m.move + " " + m.quarter + " " + m.clockwise);
+        MainBoard.Print();
+    }
 
-
-
-
-    private void Update() {/*
+    public void PrintMoves() {
+        foreach (Board.Move move in MainBoard.Getmoves()) {
+            Debug.Log(move.move + "|" + move.quarter + "|" + move.clockwise);
+        }
+    }
+}
+    /*
         if (Input.GetKeyDown(KeyCode.Space)) {
             
             Board.Move m = RootMinimax();
@@ -80,10 +90,10 @@ public class Game : MonoBehaviour {
             MainBoard.Rotate(0, true);
             MainBoard.Print();
         }*/
-    }
+    
 
-    void Awake() {
-        
+    
+        /*
        MainBoard.MarkInt(10);
        MainBoard.MarkInt(11);
        MainBoard.MarkInt(12);
@@ -91,13 +101,12 @@ public class Game : MonoBehaviour {
 
        MainBoard.MarkInt(14);
        MainBoard.MarkInt(15);
-       MainBoard.Print();
-        /*fo00reach (Board.Move move in MainBoard.Getmoves()) {
-            Debug.Log(move.move+"|"+move.quarter+"|"+move.clockwise);
+       MainBoard.Print();*/
+        /*
         }*/
 
 
 
-    }
+    
 
-}
+//}

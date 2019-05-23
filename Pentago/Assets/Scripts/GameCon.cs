@@ -8,11 +8,14 @@ public class GameCon : MonoBehaviour{
     private Game model;
     private InputBlock block;
 
+    
 
     void Start() {
         view = GetComponentInChildren<View>();
-        model = GetComponentInChildren<Game>();
+        model = new Game();
         block = GetComponent<InputBlock>();
+
+        
     }
 
     void Update(){
@@ -21,6 +24,8 @@ public class GameCon : MonoBehaviour{
             view.ResetTransform();
             block.AlreadyRefreshed();
             view.Display(model.MainBoard.GetInfo());
+            model.MainBoard.Print();
+           
         }
 
 
@@ -42,6 +47,23 @@ public class GameCon : MonoBehaviour{
         if (Input.GetKeyDown(KeyCode.A)) {
             view.Display(model.MainBoard.GetInfo());
         }
+
+        if (Input.GetKeyDown(KeyCode.Q)) {
+           
+            model.MakeAiMove();
+            view.Display(model.MainBoard.GetInfo());
+        }
+
+        if (Input.GetKeyDown(KeyCode.E)) {
+            int b = model.MainBoard.Evaluate(model.MainBoard.CurrentPlayer());
+            Debug.Log(b);
+            bool x = model.MainBoard.HasEnded();
+            Debug.Log(x);
+            bool p = model.MainBoard.CurrentPlayer();
+            Debug.Log(p);
+            model.PrintMoves();
+        }
+
     }
 
     public void NWClocwiseRot() {

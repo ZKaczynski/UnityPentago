@@ -169,7 +169,7 @@ public class Board {
             if (Xline != 0) {
                 int points =NumberOfSetBits(Xline);
                 if (points == 5) {
-                    if (!player) return -999;
+                    if (!player) return -999;        //Posible error around there
                     else return 999;
                 } else if (points > 1) {
                     xscore += points * points;
@@ -182,8 +182,8 @@ public class Board {
             if (Oline != 0) {
                 int points = NumberOfSetBits(Oline);
                 if (points == 5) {
-                    if (!player) return 999;
-                    else return -999;
+                    if (!player) return -999;
+                    else return 999;
                 } else if (points > 1) {
                     oscore += points * points;
                 }
@@ -241,28 +241,36 @@ public class Board {
 
     public List<Move> Getmoves() {
         List <Move> moveList = new List<Move>();
-        long emptytiles = ~(X | O);
-        for (int i = 0; i < 36; i++) {
-            if ((emptytiles & til[i]) != 0L) {
-                long sum = X | O| til[i];
-                if ((sum & qrts) == 0L) {
-                    moveList.Add(new Move(til[i], 0, true));
-                } else {
-                    if ((sum & qrt[0]) != 0L) {
+        long emptytiles = ~(X | O);     //all tiles that are empty are 1, 0 if occupied
+        for (int i = 0; i < 36; i++) {  // for each tile on board
+            if ((emptytiles & til[i]) != 0L) {  // if tile is occupied
+                long sum = X | O | til[i];  // all occpied tiles (with tile we marked) are 1, 0 if empty
+                if ((sum & qrts) == 0L) {   // if only quarter centers are occupied
+                    moveList.Add(new Move(til[i], 0, true));  // add this move and just one rotation  
+                } else {                                            //otherwise 
+                    if ((sum & qrt[0]) != 0L) {                     // if at least one tile in first quarter is occpied 
                         moveList.Add(new Move(til[i], 0, true));
                         moveList.Add(new Move(til[i], 0, false));
+                    }else {
+                        moveList.Add(new Move(til[i], 0, true));
                     }
                     if ((sum & qrt[1]) != 0L) {
                         moveList.Add(new Move(til[i], 1, true));
                         moveList.Add(new Move(til[i], 1, false));
+                    } else {
+                        moveList.Add(new Move(til[i], 1, true));
                     }
                     if ((sum & qrt[2]) != 0L) {
                         moveList.Add(new Move(til[i], 2, true));
                         moveList.Add(new Move(til[i], 2, false));
+                    } else {
+                        moveList.Add(new Move(til[i], 2, true));
                     }
                     if ((sum & qrt[3]) != 0L) {
                         moveList.Add(new Move(til[i], 3, true));
                         moveList.Add(new Move(til[i], 3, false));
+                    } else {
+                        moveList.Add(new Move(til[i], 3, true));
                     }
                 }
             } 
