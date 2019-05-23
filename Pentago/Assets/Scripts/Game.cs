@@ -14,7 +14,7 @@ public class Game {
         for (int i = 0; i < moves.Count; i++) {
             int score;
             MainBoard.MakeMove(moves[i]);
-            score = AlfaBetaMinimax(MainBoard, -9999, 9999, 1, 0, false, !MainBoard.CurrentPlayer());
+            score = AlfaBetaMinimax(MainBoard, -99999, 99999, 3, 0, false, !MainBoard.CurrentPlayer());
             MainBoard.UnDoMove(moves[i]);
             if (score > bestscore) {
                 best = moves[i];
@@ -27,7 +27,6 @@ public class Game {
 
     private int AlfaBetaMinimax(Board board, int alfa, int beta, int maxDepth, int currentDepth, bool maxing, bool player) {
         if (currentDepth == maxDepth || board.HasEnded()) {
-            board.Print();
             return board.Evaluate(player);
         }
         int score;
@@ -39,7 +38,9 @@ public class Game {
                 score = AlfaBetaMinimax(board, a, beta, maxDepth, currentDepth + 1, !maxing, player);
                 board.UnDoMove(moves[i]);
                 if (score > a) a = score;
-                if (a >= beta) return a;
+                if (a >= beta) {
+                    return a;
+                }
             }
             return a;
         } else {
@@ -50,7 +51,9 @@ public class Game {
                 score = AlfaBetaMinimax(board, alfa, b, maxDepth, currentDepth + 1, !maxing, player);
                 board.UnDoMove(moves[i]);
                 if (score < b) b = score;
-                if (alfa >= b) return b;
+                if (alfa >= b) {
+                    return b;
+                }
             }
             return b;
         }

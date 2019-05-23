@@ -55,15 +55,13 @@ public class GameCon : MonoBehaviour{
         }
 
         if (Input.GetKeyDown(KeyCode.E)) {
-            int b = model.MainBoard.Evaluate(model.MainBoard.CurrentPlayer());
-            Debug.Log(b);
-            bool x = model.MainBoard.HasEnded();
-            Debug.Log(x);
-            bool p = model.MainBoard.CurrentPlayer();
-            Debug.Log(p);
-            model.PrintMoves();
+            model.MainBoard.Print();
         }
 
+        if (Input.GetKeyDown(KeyCode.M)) {
+
+            model.PrintMoves();
+        }
     }
 
     public void NWClocwiseRot() {

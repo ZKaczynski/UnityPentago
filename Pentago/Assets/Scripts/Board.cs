@@ -155,6 +155,7 @@ public class Board {
 
 
 
+
     public void UnDoMove(Move m) {
         Xturn = !Xturn;
         Rotate(m.quarter, !m.clockwise);
@@ -169,8 +170,8 @@ public class Board {
             if (Xline != 0) {
                 int points =NumberOfSetBits(Xline);
                 if (points == 5) {
-                    if (!player) return -999;        //Posible error around there
-                    else return 999;
+                    if (!player) return -9999;        //Posible error around there
+                    else return 9999;
                 } else if (points > 1) {
                     xscore += points * points;
                 }
@@ -182,8 +183,8 @@ public class Board {
             if (Oline != 0) {
                 int points = NumberOfSetBits(Oline);
                 if (points == 5) {
-                    if (!player) return -999;
-                    else return 999;
+                    if (!player) return -9999;
+                    else return 9999;
                 } else if (points > 1) {
                     oscore += points * points;
                 }
@@ -239,14 +240,97 @@ public class Board {
         return Xturn;
     }
 
+    public long MoveToState(Move m) {
+        long sum = X | O | m.move;
+
+        long[] shift = new long[8];
+        int delta = 0;
+        if (m.quarter == 0) delta = 0;
+        else if (m.quarter == 1) delta = 3;
+        else if (m.quarter == 2) delta = 18;
+        else if (m.quarter == 3) delta = 21;
+
+
+        shift[0] = sum & til[0 + delta];
+        shift[1] = sum & til[1 + delta];
+        shift[2] = sum & til[2 + delta];
+        shift[3] = sum & til[8 + delta];
+        shift[4] = sum & til[14 + delta];
+        shift[5] = sum & til[13 + delta];
+        shift[6] = sum & til[12 + delta];
+        shift[7] = sum & til[6 + delta];
+
+        sum = sum & (~qrt[m.quarter]);
+        
+        if (m.clockwise) {
+            if (shift[0] != 0) sum |= til[2 + delta];
+            if (shift[1] != 0) sum |= til[8 + delta];
+            if (shift[2] != 0) sum |= til[14 + delta];
+            if (shift[3] != 0) sum |= til[13 + delta];
+            if (shift[4] != 0) sum |= til[12 + delta];
+            if (shift[5] != 0) sum |= til[6 + delta];
+            if (shift[6] != 0) sum |= til[0 + delta];
+            if (shift[7] != 0) sum |= til[1 + delta];
+           
+        } else {
+            if (shift[0] != 0) sum |= til[12 + delta];
+            if (shift[1] != 0) sum |= til[6 + delta];
+            if (shift[2] != 0) sum |= til[0 + delta];
+            if (shift[3] != 0) sum |= til[1 + delta];
+            if (shift[4] != 0) sum |= til[2 + delta];
+            if (shift[5] != 0) sum |= til[8 + delta];
+            if (shift[6] != 0) sum |= til[14 + delta];
+            if (shift[7] != 0) sum |= til[13 + delta];           
+        }
+
+        return sum;
+    }
+
+    public List<Move> Getmoves() {
+        List<Move> moveList = new List<Move>();
+        List<long> gameStates = new List<long>();
+        long emptytiles = ~(X | O);     
+        for (int i = 0; i < 36; i++) { 
+            if ((emptytiles & til[i]) != 0L) {
+                for (int k = 0; k < 4; k++) {
+                    Move m = new Move(til[i], k, true);
+                    long state = MoveToState(m);
+                    if (gameStates.IndexOf(state) < 0) {
+                        gameStates.Add(state);
+                        moveList.Add(m);
+                    }
+                }
+                for (int k = 0; k < 4; k++) {
+                    Move m = new Move(til[i], k, false);
+                    long state = MoveToState(m);
+                    if (gameStates.IndexOf(state) < 0) {
+                        gameStates.Add(state);
+                        moveList.Add(m);
+                    }
+                }
+            } 
+        }
+        return moveList;
+    }
+
+
+
+
+    /*
     public List<Move> Getmoves() {
         List <Move> moveList = new List<Move>();
+        List<long> gameStates = new List<long>();
         long emptytiles = ~(X | O);     //all tiles that are empty are 1, 0 if occupied
         for (int i = 0; i < 36; i++) {  // for each tile on board
-            if ((emptytiles & til[i]) != 0L) {  // if tile is occupied
+            if ((emptytiles & til[i]) != 0L) {  // if tile is not occupied
                 long sum = X | O | til[i];  // all occpied tiles (with tile we marked) are 1, 0 if empty
-                if ((sum & qrts) == 0L) {   // if only quarter centers are occupied
-                    moveList.Add(new Move(til[i], 0, true));  // add this move and just one rotation  
+                if ((sum & qrts) == 0L) {     // if only quarter centers are occupied
+                    Move m = new Move(til[i], 0, true);
+                    long state = MoveToState(m);
+                    if (gameStates.IndexOf(state) < 0) {
+                        gameStates.Add(state);
+                        moveList.Add(m);  // add this move and just one rotation  
+                    }
                 } else {                                            //otherwise 
                     if ((sum & qrt[0]) != 0L) {                     // if at least one tile in first quarter is occpied 
                         moveList.Add(new Move(til[i], 0, true));
@@ -276,7 +360,7 @@ public class Board {
             } 
         }
         return moveList;
-    }
+    }*/
 
     public int[] GetInfo() {
         int[] info = new int[36];
