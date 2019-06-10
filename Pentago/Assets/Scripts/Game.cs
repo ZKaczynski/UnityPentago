@@ -14,7 +14,7 @@ public class Game {
         for (int i = 0; i < moves.Count; i++) {
             int score;
             MainBoard.MakeMove(moves[i]);
-            score = AlfaBetaMinimax(MainBoard, -99999, 99999, 3, 0, false, !MainBoard.CurrentPlayer());
+            score = AlfaBetaMinimax(MainBoard, -99999, 99999, 2, 0, false, !MainBoard.CurrentPlayer());
             MainBoard.UnDoMove(moves[i]);
             if (score > bestscore) {
                 best = moves[i];
@@ -67,7 +67,14 @@ public class Game {
     }
 
     public void PrintMoves() {
-        foreach (Board.Move move in MainBoard.Getmoves()) {
+        Debug.Log("Before sort");
+        List<Board.Move> moves = MainBoard.Getmoves();
+        foreach (Board.Move move in moves) {
+            Debug.Log(move.move + "|" + move.quarter + "|" + move.clockwise);
+        }
+        MainBoard.sortMoveList(moves);
+        Debug.Log("After sort");
+        foreach (Board.Move move in moves) {
             Debug.Log(move.move + "|" + move.quarter + "|" + move.clockwise);
         }
     }

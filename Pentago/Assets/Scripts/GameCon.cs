@@ -39,6 +39,7 @@ public class GameCon : MonoBehaviour{
 
                 model.MainBoard.MarkInt(x);
                 view.Display(model.MainBoard.GetInfo());
+
             }
         }
         
@@ -69,6 +70,54 @@ public class GameCon : MonoBehaviour{
             model.MainBoard.Rotate(0, true);
             view.qrts[0].RotateClockwise();
         }
+    }
 
+    public void NWCounterClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(0, false);
+            view.qrts[0].RotateCounterClockwise();
+        }
+    }
+
+    public void NEClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(1, true);
+            view.qrts[1].RotateClockwise();
+        }
+    }
+
+    public void NECounterClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(1, false);
+            view.qrts[1].RotateCounterClockwise();
+        }
+    }
+
+    public void SWClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(2, true);
+            view.qrts[2].RotateClockwise();
+        }
+    }
+
+    public void SWCounterClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(2, false);
+            view.qrts[2].RotateCounterClockwise();
+        }
+    }
+
+    public void SEClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(3, true);
+            view.qrts[3].RotateClockwise();
+        }
+    }
+
+    public void SECounterClocwiseRot() {
+        if (!block.IsBlocked()) {
+            model.MainBoard.Rotate(3, false);
+            view.qrts[3].RotateCounterClockwise();
+        }
     }
 }

@@ -24,8 +24,18 @@ public class Board {
             quarter = q;
             clockwise = c;
         }
+
+
     }
 
+     int  SortByScore(Move m1, Move m2) {
+        return Ev(m2).CompareTo(Ev(m1));
+        }
+
+
+    public void sortMoveList(List<Move> m) {
+        m.Sort(SortByScore);
+    }
 
     static Board() {
         til = new long[36];
@@ -162,6 +172,13 @@ public class Board {
         Clear(m.move);
     }
 
+    private int Ev(Move m) {
+        MakeMove(m);
+        int s = Evaluate(!Xturn);
+        UnDoMove(m);
+        return s;
+    }
+
     public int Evaluate(bool player) {
         int xscore = 0;
         int oscore = 0;
@@ -170,7 +187,7 @@ public class Board {
             if (Xline != 0) {
                 int points =NumberOfSetBits(Xline);
                 if (points == 5) {
-                    if (!player) return -9999;        //Posible error around there
+                    if (!player) return -9999;        
                     else return 9999;
                 } else if (points > 1) {
                     xscore += points * points;
@@ -196,7 +213,11 @@ public class Board {
     }
 
     public void MarkInt(int t) {
-        Mark(til[t]);
+        if (((X | O) & til[t]) == 0L) {
+            Mark(til[t]);
+            Xturn = !Xturn;
+        }
+        
     }
 
     private void Mark(long tile) {
@@ -310,6 +331,8 @@ public class Board {
                 }
             } 
         }
+
+        moveList.Sort(SortByScore); /////UNCOMMENT OR FINAL WONT WORK
         return moveList;
     }
 
