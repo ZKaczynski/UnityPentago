@@ -187,27 +187,35 @@ public class Board {
             if (Xline != 0) {
                 int points =NumberOfSetBits(Xline);
                 if (points == 5) {
-                    if (!player) return -9999;        
-                    else return 9999;
+                    if (player) return 9999;        
+                    else return -9999;
                 } else if (points > 1) {
                     xscore += points * points;
                 }
             }
         }
-        
         for (int i = 0; i < 32; i++) {
             long Oline = O & win[i];
             if (Oline != 0) {
                 int points = NumberOfSetBits(Oline);
                 if (points == 5) {
-                    if (!player) return -9999;
+                    if (player) return -9999;
                     else return 9999;
                 } else if (points > 1) {
                     oscore += points * points;
                 }
             }
         }
-        
+        if ((til[7] & X) != 0L) xscore += 25;
+        if ((til[10] & X) != 0L) xscore +=25;
+        if ((til[25] & X) != 0L) xscore += 25;
+        if ((til[28] & X) != 0L) xscore += 25;
+
+        if ((til[7] & O) != 0L) oscore += 25;
+        if ((til[10] & O) != 0L) oscore += 25;
+        if ((til[25] & O) != 0L) oscore += 25;
+        if ((til[28] & O) != 0L) oscore += 25;
+
         if (!player) return oscore - xscore;
         else return xscore - oscore;
     }
@@ -306,7 +314,7 @@ public class Board {
 
         return sum;
     }
-
+    
     public List<Move> Getmoves() {
         List<Move> moveList = new List<Move>();
         List<long> gameStates = new List<long>();
@@ -332,11 +340,11 @@ public class Board {
             } 
         }
 
-        moveList.Sort(SortByScore); /////UNCOMMENT OR FINAL WONT WORK
+       // moveList.Sort(SortByScore); /////UNCOMMENT OR FINAL WONT WORK
         return moveList;
     }
 
-
+    
 
 
     /*
@@ -383,7 +391,8 @@ public class Board {
             } 
         }
         return moveList;
-    }*/
+    }
+    */
 
     public int[] GetInfo() {
         int[] info = new int[36];

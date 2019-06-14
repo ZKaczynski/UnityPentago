@@ -24,7 +24,6 @@ public class Game {
         return best;
     }
 
-
     private int AlfaBetaMinimax(Board board, int alfa, int beta, int maxDepth, int currentDepth, bool maxing, bool player) {
         if (currentDepth == maxDepth || board.HasEnded()) {
             return board.Evaluate(player);
